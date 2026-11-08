@@ -24,13 +24,13 @@ def train(device, epochs, batch_size, lr, extra_plots):
     model_pretrained = None
     
     if os.path.exists('model.pt'):
-        model.load_state_dict(torch.load('model.pt'), strict=False)
+        model.load_state_dict(torch.load('model.pt', weights_only=True), strict=False)
         
         # Reset logvar weights for CM
         model.logvar_linear = nn.Linear(model.logvar_linear.in_features, model.logvar_linear.out_features).to(device)
         
         model_pretrained = Unet(256, 1, 1, base_dim=64, dim_mults=[2, 4]).to(device)
-        model_pretrained.load_state_dict(torch.load('model.pt'), strict=False)
+        model_pretrained.load_state_dict(torch.load('model.pt', weights_only=True), strict=False)
         print("Loaded model from model.pt, performing consistency distillation.")
         consistency_training = False
     else:
